@@ -15,6 +15,12 @@ module.exports = function(req, res, next) {
   var task = req.argv,
       dirname = path.dirname(req.path).replace(req.gr.homePath, '~') + path.sep;
 
+  let quiet = false;
+  if (task[0] === '-q' || task[0] === '--quiet') {
+    quiet = true;
+    task.shift();
+  }
+
   if (task[0] == '--') {
     task.shift();
   }
@@ -32,10 +38,12 @@ module.exports = function(req, res, next) {
   }
 
   if (req.format == 'human') {
-    console.log(
-      style('\nin ' + dirname, 'gray') +
-      style(path.basename(req.path), 'white') + '\n'
-      );
+    if (!quiet) {
+      console.log(
+        style('\nin ' + dirname, 'gray') +
+        style(path.basename(req.path), 'white') + '\n'
+        );
+    }
   }
 
   // always directly pass the full array,
